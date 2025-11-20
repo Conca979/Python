@@ -82,6 +82,36 @@ def dimonShape(size, s = "*"):
     print(" "*sp + s*stars)
 # dimonShape(11)
 
+def countNonAdjacentBookdArrangements():
+  print(r"""def countNonAdjacentBookdArrangements(Books):
+  def b(Books, curB, c):
+    if Books[curB] >= 1:
+      Books[curB] = Books[curB] - 1
+      #
+      if not any(Books.values()): # all books are placed
+        c[0] = c[0] + 1
+        return
+      #
+      for i in [_ for _ in Books.keys() if _ != curB]:
+          b(Books.copy(), i, c)
+
+  c, f = [0], 1
+  #
+  if max(Books.values()) > sum(Books.values()) + 1: 
+    print("No such valid placement!")
+    return
+  #
+  for _ in Books.keys():
+    b(Books.copy(), _, c)
+    if (Books[_] > 0):
+      f = f * math.factorial(Books[_])
+  # books within the same subject are distinct so must muliply with f
+  return c[0]*f
+
+  # to run this code:
+  # pass in a list of (subject:books)
+  # run print(countNonAdjacentBookdArrangements(Books))""")
+
 class SortBy():
   def b(self, arr): # bubble sort
     for _ in range(len(arr)-1):
