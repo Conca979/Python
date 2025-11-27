@@ -82,8 +82,107 @@ def dimonShape(size, s = "*"):
     print(" "*sp + s*stars)
 # dimonShape(11)
 
-def countNonAdjacentBookdArrangements():
-  print(r"""def countNonAdjacentBookdArrangements(Books):
+def lengthOfLongestSubstring(s):
+  l, m, c = len(s), 0, 0
+  for _ in range(l):
+    for i in range(_, l):
+      if s[i] not in [s[j] for j in range(_, i)]:
+        c = c + 1
+        if c > m: m = c
+      else:
+        print(c)
+        c = 0
+        break
+    c = 0
+  return m
+
+def addTwoNumbers(l1, l2):
+  # l1 and l2: non-empty linked lists (ListNode class) representing two reversed non-negative integers.
+  class ListNode():
+    def __init__(self, val = 0, next = None):
+      self.val = val
+      self.next = next
+
+  l, c = ListNode(), 0
+  t = l
+  while l1 and l2:
+    a = l1.val + l2.val
+    if c: a, c = a + 1, 0
+    if a >= 10: a, c = a - 10, 1
+    t.next = ListNode(a)
+    l1, l2 = l1.next, l2.next
+    t = t.next
+  while l1:
+    v = l1.val
+    if c: v, c = v + 1, 0
+    if v >= 10: v, c = v - 10, 1
+    t.next, l1 = ListNode(v), l1.next
+    t = t.next
+  while l2:
+    v = l2.val
+    if c: v, c = v + 1, 0
+    if v >= 10: v, c = v - 10, 1
+    t.next, l2 = ListNode(v), l2.next
+    t = t.next
+  if c: t.next = ListNode(1)
+  return l.next
+
+def myAtoi(s):
+  # Trim spaces, read optional sign,
+  # accumulate digits, clamp to int32.
+  if len(s) == 0: return 0
+  s, p, sm = s.lstrip(), 0, 0
+  mx, mn = 2147483647, -2147483648
+  if s[0] == '-': s, p = s[1:], 0
+  elif s[0] == '+': s, p = s[1:], 1
+  else: p = 1
+  for _ in s:
+    if _ in '0123456789': sm = sm*10 + int(_)
+    else: break
+  if p: return (sm if sm <= mx else mx)
+  else: return (-sm if -sm > mn else mn)
+
+def longestPalindrome(s):
+  # s: string
+  m, c, ln = 0, 1, len(s)
+  #
+  if ln == 1: return s
+  if ln == 2: return (s[0] if s[0] != s[1] else s)
+  #
+  rs = ""
+  for _ in range(1, ln):
+    l, r = _ - 1, _ + 1
+    if r >= ln: break
+    while True:
+      if s[l] == s[r]:
+        c = c + 2
+        if c > m: m, rs = c, s[l:r + 1]
+        if l >= 1 and r < ln - 1: l, r = l - 1, r + 1
+        else:
+          c = 0
+          break
+      else:
+        if c > m: m, rs = c, s[l + 1:r]
+        c = 0
+        break
+  for _ in range(ln):
+    l, r = _, _ + 1
+    if r >= ln: break
+    while True:
+      if s[l] == s[r]:
+        c = c + 2
+        if c > m: m, rs = c, s[l:r + 1]
+        if l >= 1 and r < ln - 1: l, r = l - 1, r + 1
+        else:
+          c = 0
+          break
+      else:
+        if c > m: m, rs = c, s[l + 1:r]
+        c = 0
+        break
+  return rs
+
+def countNonAdjacentBookdArrangements(Books):
   def b(Books, curB, c):
     if Books[curB] >= 1:
       Books[curB] = Books[curB] - 1
