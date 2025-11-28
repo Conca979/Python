@@ -12,5 +12,6 @@ import heapq
 # from sklearn.linear_model import LinearRegression
 # from sklearn.cluster import KMeans
 
-# 3d array [a][b][c] : a the deth, b rows and c columns
+# 3d array [a][b][c] : a the depth, b rows and c columns
+
 

@@ -82,7 +82,7 @@ def dimonShape(size, s = "*"):
     print(" "*sp + s*stars)
 # dimonShape(11)
 
-def lengthOfLongestSubstring(s):
+def lengthOfLongestDistinctCharSubstring(s):
   l, m, c = len(s), 0, 0
   for _ in range(l):
     for i in range(_, l):
@@ -142,6 +142,124 @@ def myAtoi(s):
   if p: return (sm if sm <= mx else mx)
   else: return (-sm if -sm > mn else mn)
 
+def threeSum(nums): # this function bad in performance
+  # nums: array of nums
+  nums, l = sorted(nums), len(nums)
+  #
+  return list(set(map(tuple,([[nums[a], nums[b], nums[c]] for a in range(l-2) for b in range(a+1, l-1) for c in range(b+1, l) if (nums[a] + nums[b] + nums[c]) == 0]))))
+
+def searchRange(nums, target): # wrong!!
+  # Given an array of integers nums sorted in non-decreasing order, find the starting and ending position of a given target value.
+  # If target is not found in the array, return [-1, -1].
+  # You must write an algorithm with O(log n) runtime complexity.
+  l, t, n = len(nums), target, nums
+  if t not in n: return [-1, -1] #!!
+  lf, r = 0, l - 1
+  while lf < r:
+    m = (lf + r)//2
+    if n[m] < t: lf = m + 1
+    elif n[m] > t: r = m - 1
+    else: 
+      if m < 0 or m >= l: return [-1, -1]
+      else: lf, r = m, m
+      while lf > 0 and n[lf - 1] == t: lf = lf - 1
+      while r < l - 1 and n[r + 1] == t: r = r + 1
+      break
+  return [lf, r]
+
+#---------------
+
+def isValidSudoku(board):
+  def subBox(b, r, c):
+    r2, c2 = int(r/3)*3, int(c/3)*3
+    return [b[_][i] for _ in range(r2, r2+3) for i in range(c2, c2 + 3) if [_, i] != [r, c] and b[_][i] != "."]
+
+  b = board
+  for _ in range(9):
+    for i in range(9):
+      if b[_][i] != ".":
+        t = [b[a][i] for a in range(9) if b[a][i] != "." and a != _] + [b[_][a] for a in range(9) if b[_][a] != "." and a != i] + subBox(b, _, i)
+        if b[_][i] in t: return False
+  return True
+
+def solveSudoku(b): # b: board[row][column]
+  """Do not return anything, modify board in-place instead"""
+  def __subBox__(b, r, c):
+    r2, c2 = int(r/3)*3, int(c/3)*3
+    return [b[_][i] for _ in range(r2, r2+3) for i in range(c2, c2 + 3) if [_, i] != [r, c] and b[_][i] != "."]
+  
+  def _isValidPosition_(b, r, c, val):
+    t = [b[r][a] for a in range(9) if b[r][a] != "." and a != c] + [b[a][c] for a in range(9) if b[a][c] != "." and a != r] + __subBox__(b, r, c)
+    return True if val not in t else False
+  
+  def _validity_(b, r, c):
+    t = [b[r][a] for a in range(9) if b[r][a] != "." and a != c] + [b[a][c] for a in range(9) if b[a][c] != "." and a != r] + __subBox__(b, r, c)
+    return [_ for _ in "123456789" if _ not in t]
+  
+  def _emptyGrid_(b):
+    return sorted({f"{_}{i}":len(_validity_(b, _, i)) for _ in range(9) for i in range(9) if b[_][i] == "."}.items(), key = lambda _: _[1])
+
+  def _solveSudoku2_(b): # using Minimum Remaining Values (MRV)
+    g = _emptyGrid_(b)
+    if len(g): # if ∃ empty grid
+      g = [int(g[0][0][0]), int(g[0][0][1])]
+      for _ in _validity_(b, g[0], g[1]):
+        if _isValidPosition_(b, g[0], g[1], _):
+          b[g[0]][g[1]] = _
+          if _solveSudoku2_(b): return True
+          else: b[g[0]][g[1]] = "."
+      else: return False
+    else: return True
+
+  def _solveSudoku_(b, r, c): # raw backtracking
+    if c == 9: r, c = r + 1, 0
+    if r == 9: return True
+    #
+    if b[r][c] != ".":
+      return _solveSudoku_(b, r, c + 1)
+    else: # empty grid
+      for _ in _validity_(b, r, c):
+        if _isValidPosition_(b, r, c, _):
+          b[r][c] = _
+          if _solveSudoku_(b, r, c + 1): return True
+          else: b[r][c] = "."
+      else: return False
+
+  _solveSudoku2_(b)
+
+def showBoard(b): # board[n][n]
+  print("\n  ", end = "")
+  for _ in range(len(b)): print(f" {_}", end = "")
+  print("\n")
+  for _ in range(len(b)):
+    print(f"{_} ", end = "")
+    for i in range(len(b)):
+      print(f"|{b[_][i] if b[_][i] in "123456789" else "_"}", end = "")
+    print("")
+
+#--------------------
+
+def reverse(x):
+  # the mathematical identity requires: a = (a // b)*b + r
+  # Given a signed 32-bit integer x, return x with its digits reversed. If reversing x causes the value to go outside the signed 32-bit integer range [-231, 231 - 1], then return 0.
+  mx, mn, rv, p = 2147483647, -2147483648, 0, 0
+  #
+  p = 0 if x < 0 else 1
+  for _ in str(x)[::-1] if p else str(x)[1:][::-1]:
+    if p:
+      if int(mx/10) < rv: return 0
+      elif int(mx/10) == rv:
+        if mx%10 < int(_): return 0
+        else: rv = rv*10 + int(_)
+      else: rv = rv*10 + int(_)
+    else:
+      if int(mn/10) > rv: return 0
+      elif int(mn/10) == rv:
+        if mn%10 < int(_): return 0
+        else: rv = rv*10 - int(_)
+      else: rv = rv*10 - int(_)
+  return rv
+
 def longestPalindrome(s):
   # s: string
   m, c, ln = 0, 1, len(s)
@@ -182,7 +300,7 @@ def longestPalindrome(s):
         break
   return rs
 
-def countNonAdjacentBookdArrangements(Books):
+def countNonAdjacentBookArrangements(Books):
   def b(Books, curB, c):
     if Books[curB] >= 1:
       Books[curB] = Books[curB] - 1
