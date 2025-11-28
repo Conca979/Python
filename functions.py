@@ -211,7 +211,7 @@ def solveSudoku(b): # b: board[row][column]
       else: return False
     else: return True
 
-  def _solveSudoku_(b, r, c): # raw backtracking
+  def _solveSudoku_(b, r = 0, c = 0): # raw backtracking
     if c == 9: r, c = r + 1, 0
     if r == 9: return True
     #
