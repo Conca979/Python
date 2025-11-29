@@ -225,6 +225,8 @@ def solveSudoku(b): # b: board[row][column]
           else: b[r][c] = "."
       else: return False
 
+  # using either of 2 algorithms to solving (MRV recommented)
+  # _solveSudoku_(b)
   _solveSudoku2_(b)
 
 def showBoard(b): # board[n][n]
@@ -238,6 +240,25 @@ def showBoard(b): # board[n][n]
     print("")
 
 #--------------------
+
+def countAndSay(self, n: int) -> str:
+  if n == 1: return "1"
+  s = "1"
+
+  def strCompress(n): # n = str
+    s, l, i = '', len(n), 0
+    while i < l:
+      ct, lt = 0, n[i]
+      while i < l and lt == n[i]: ct, i = ct + 1, i + 1
+      s = s + str(ct) + lt
+    return s
+  
+  def _counAndSay_(n, st, i = 2):
+    if i > n: return st
+    st = strCompress(st)
+    return _counAndSay_(n, st, i + 1)
+
+  return _counAndSay_(n, s)
 
 def reverse(x):
   # the mathematical identity requires: a = (a // b)*b + r
