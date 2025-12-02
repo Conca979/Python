@@ -14,9 +14,10 @@
 
 # 3d array [a][b][c] : a the depth, b rows and c columns
 
-class TicTacToe:
-  def __init__(self, s = 9, st = "pvp"):
-    self.size = s
+class Gomoku: # 1st arg n as board's size n by n, 2nd arg not available yet
+  # it's actually tic-tac-toe but the goal is get 5 consecutive pieces either horizontally, vertically, or diagonally.
+  def __init__(self, size = 9, st = "pvp"):
+    self.size = size
     # the 1st turn is X: 1, next O: 0
     self.t = 1
     # 1 for pvp, 2 for pve
@@ -38,8 +39,19 @@ class TicTacToe:
     print("")
     return [int(s.split()[0]), int(s.split()[1])]
   
-  def _win_(self, i):
-    return
+  def _boardIsFull_(self):
+    return True if len([1 for _ in range(self.size) for i in range(self.size) if self.board[_][i] == '_']) == 0 else False
+  
+  def _win_(self, ip):
+    t = 'X' if self.t == 0 else 'O'
+    for _ in range(-1, 2):
+      for i in range(-1, 2):
+        if (_, i) == (0, 0): continue
+        c, ipC1, ipC2 = 0, ip.copy(), ip.copy()
+        while ipC1[0] in [v for v in range(self.size)] and ipC1[1] in [v for v in range(self.size)] and self.board[ipC1[0]][ipC1[1]] == t: c, ipC1[0], ipC1[1] = c + 1, ipC1[0] + _, ipC1[1] + i
+        while ipC2[0] in [v for v in range(self.size)] and ipC2[1] in [v for v in range(self.size)] and self.board[ipC2[0]][ipC2[1]] == t: c, ipC2[0], ipC2[1] = c + 1, ipC2[0] - _, ipC2[1] - i
+        if c >= 6: return True
+    return False
 
   def run(self):
     self.showBoard()
@@ -47,8 +59,12 @@ class TicTacToe:
     while i != 'gg':
       self.board[i[0]][i[1]], self.t = 'X' if self.t else 'O', (self.t + 1) % 2
       self.showBoard()
-      # check if win
+      if self._win_(i): break
+      if self._boardIsFull_():
+        print("\n Tie !!")
+        return
       i = self._input_()
+    print(f"\n{'X' if self.t == 0 else 'O'} Win!")
 
   def showBoard(self):
     b = self.board
@@ -60,6 +76,4 @@ class TicTacToe:
       for i in range(self.size):
         print(f"|{b[_][i]}", end = "")
       print("|")
-
-game = TicTacToe(9)
-game.run()
+ 
