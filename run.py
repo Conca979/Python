@@ -14,8 +14,8 @@
 
 # 3d array [a][b][c] : a the depth, b rows and c columns
 
-class Gomoku: # 1st arg n as board's size n by n, 2nd arg not available yet
-  # it's actually tic-tac-toe but the goal is get 5 consecutive pieces either horizontally, vertically, or diagonally.
+class Gomoku: # 1st arg n as board's size n by n, 2nd arg is not available yet
+  # it's actually tic-tac-toe game but the goal is to get 5 consecutive pieces of yours either horizontally, vertically, or diagonally.
   def __init__(self, size = 9, st = "pvp"):
     self.size = size
     # the 1st turn is X: 1, next O: 0
