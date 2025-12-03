@@ -28,7 +28,7 @@ class Gomoku: # 1st arg n as board's size n by n, 2nd arg is not available yet
   def _input_(self):
     while True:
       s = input(f"\n\tLet {'X' if self.t else 'O'} at: ").strip()
-      if s == "gg": return s
+      if s == "gg" or s == "back": return s
       for _ in s:
         if _ not in "0123456789 " or ' ' not in s:
           print(f"{'-'*5} Invalid input, please try again {'-'*5}")
@@ -41,6 +41,10 @@ class Gomoku: # 1st arg n as board's size n by n, 2nd arg is not available yet
   
   def _boardIsFull_(self):
     return True if len([1 for _ in range(self.size) for i in range(self.size) if self.board[_][i] == '_']) == 0 else False
+
+  def _back_(self, i):
+    self.board[i[0]][i[1]] = '_'
+    self.t = (self.t + 1)%2
   
   def _win_(self, ip):
     t = 'X' if self.t == 0 else 'O'
@@ -57,13 +61,22 @@ class Gomoku: # 1st arg n as board's size n by n, 2nd arg is not available yet
     self.showBoard()
     i = self._input_()
     while i != 'gg':
+      if i == 'back':
+        if b == 'back':
+          print(f"{'-'*5} Invalid input, please try again {'-'*5}")
+          i = self._input_()
+          continue
+        self._back_(b)
+        self.showBoard()
+        i, b = self._input_(), i
+        continue
       self.board[i[0]][i[1]], self.t = 'X' if self.t else 'O', (self.t + 1) % 2
       self.showBoard()
       if self._win_(i): break
       if self._boardIsFull_():
         print("\n Tie !!")
         return
-      i = self._input_()
+      i, b = self._input_(), i
     print(f"\n{'X' if self.t == 0 else 'O'} Win!")
 
   def showBoard(self):
@@ -77,3 +90,6 @@ class Gomoku: # 1st arg n as board's size n by n, 2nd arg is not available yet
         print(f"|{b[_][i]}", end = "")
       print("|")
  
+
+game = Gomoku(9)
+game.run()
