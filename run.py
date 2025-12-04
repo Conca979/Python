@@ -52,8 +52,8 @@ class Gomoku: # 1st arg n as board's size n by n, 2nd arg is not available yet
       for i in range(-1, 2):
         if (_, i) == (0, 0): continue
         c, ipC1, ipC2 = 0, ip.copy(), ip.copy()
-        while ipC1[0] in [v for v in range(self.size)] and ipC1[1] in [v for v in range(self.size)] and self.board[ipC1[0]][ipC1[1]] == t: c, ipC1[0], ipC1[1] = c + 1, ipC1[0] + _, ipC1[1] + i
-        while ipC2[0] in [v for v in range(self.size)] and ipC2[1] in [v for v in range(self.size)] and self.board[ipC2[0]][ipC2[1]] == t: c, ipC2[0], ipC2[1] = c + 1, ipC2[0] - _, ipC2[1] - i
+        while 0 <= ipC1[0] < self.size and 0 <= ipC1[1] < self.size and self.board[ipC1[0]][ipC1[1]] == t: c, ipC1[0], ipC1[1] = c + 1, ipC1[0] + _, ipC1[1] + i
+        while 0 <= ipC2[0] < self.size and 0 <= ipC2[1] < self.size and self.board[ipC2[0]][ipC2[1]] == t: c, ipC2[0], ipC2[1] = c + 1, ipC2[0] - _, ipC2[1] - i
         if c >= 6: return True
     return False
 
@@ -91,5 +91,5 @@ class Gomoku: # 1st arg n as board's size n by n, 2nd arg is not available yet
       print("|")
  
 
-game = Gomoku(9)
+game = Gomoku(20)
 game.run()
