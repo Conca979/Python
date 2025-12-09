@@ -89,3 +89,7 @@ class Gomoku: # 1st arg n as board's size n by n, 2nd arg is not available yet
       for i in range(self.size):
         print(f"|{b[_][i]}", end = "")
       print("|")
+ 
+
+game = Gomoku(20)
+game.run()
