@@ -241,6 +241,156 @@ def showBoard(b): # board[n][n]
 
 #--------------------
 
+def convert(s, numRows): # Zigzag Conversion
+  l = len(s)
+  if numRows == 1 or l <= 1: return numRows
+  c = math.ceil(len(s)/(numRows*2 - 2))*(numRows - 1)
+  b = [['_' for _ in range(c)] for i in range(numRows)]
+  r, c = 0, 0
+  i = 1 # 1: downward insertion 0: diagonal insertion
+  for _ in s:
+    if r == numRows: i, r, c = 0, r - 2, c + 1
+    if r == 0: i = 1
+    if i:
+      b[r][c] = _
+      r += 1
+    else:
+      b[r][c] = _
+      r -= 1
+      c += 1
+
+  for a in range(len(b)):
+    for d in range(len(b[0])):
+      print(f"{b[a][d]}|", end = "")
+    print("")
+  print("")
+
+  result = ''
+  for r in range(len(b)):
+    for c in range(len(b[0])):
+      if b[r][c] != '_':
+        result += b[r][c]
+
+  return result
+
+def canJump(nums):
+  l = len(nums)
+  if l == 1: return True
+  g = nums[0]
+  for _ in range(l):
+    if g == 0: return False
+    g = (g - 1) if (g - 1) > nums[_] else nums[_]
+  else: return True
+
+  # print(canJump([8,2,4,4,4,9,5,2,5,8,8,0,8,6,9,1,1,6,3,5,1,2,6,6,0,4,8,6,0,3,2,8,7,6,5,1,7,0,3,4,8,3,5,9,0,4,0,1,0,5,9,2,0,7,0,2,1,0,8,2,5,1,2,3,9,7,4,7,0,0,1,8,5,6,7,5,1,9,9,3,5,0,7,5]))
+
+def merge(intervals):
+  f = [_ for i in sorted(intervals) for _ in i]
+  i = 1
+  while i < len(f) - 2:
+    if f[i] >= f[i + 1]:
+      if f[i] >= f[i + 2]:
+        del f[i + 1: i + 3]
+      else: 
+        del f[i: i + 2]
+    else: i += 2
+
+  return [[f[i], f[i + 1]] for i in range(0, len(f), 2)]
+  # print(merge([[4,5],[2,4],[4,6],[3,4],[0,0],[1,1],[3,5],[2,2]]))
+
+def minPathSum(b): # b = 2d board
+  r, c = len(b), len(b[0])
+  for _ in range(0, r):
+    for i in range(0, c):
+      if (_, i) == (0, 0): continue
+      if i == 0 and _ != 0:
+        b[_][i] = b[_][i] + b[_ - 1][i]
+      elif i != 0 and _ == 0:
+        b[_][i] = b[_][i] + b[_][i - 1]
+      else:
+        b[_][i] = b[_][i] + min(b[_ - 1][i], b[_][i - 1])
+  return b[-1][-1]
+
+class Gomoku: # 1st arg n as board's size n by n, 2nd arg is not available yet
+  # it's actually tic-tac-toe game but the goal is to get 5 consecutive pieces of yours either horizontally, vertically, or diagonally.
+  def __init__(self, size = 9, st = "pvp"):
+    self.size = int(size)
+    # the 1st turn is X: 1, next O: 0
+    self.t = 1
+    # 1 for pvp, 2 for pve
+    self.type = 1 if st == "pvp" else 2
+    self.board = [["_" for _ in range(self.size)] for i in range(self.size)]
+  #
+
+  def _input_(self):
+    while True:
+      s = input(f"\n\tLet {'X' if self.t else 'O'} at: ").strip()
+      if s == "gg" or s == "back": return s
+      for _ in s:
+        if _ not in "0123456789 " or ' ' not in s:
+          print(f"{'-'*5} Invalid input, please try again {'-'*5}")
+          break
+      else:
+        if (False if int(s.split()[0]) >= self.size or int(s.split()[1]) >= self.size or self.board[int(s.split()[0])][int(s.split()[1])] != '_' else True): break
+        else: print(f"{'-'*5} Invalid input, please try again {'-'*5}")
+    print("")
+    return [int(s.split()[0]), int(s.split()[1])]
+  
+  def _boardIsFull_(self):
+    return True if len([1 for _ in range(self.size) for i in range(self.size) if self.board[_][i] == '_']) == 0 else False
+
+  def _back_(self, i):
+    self.board[i[0]][i[1]] = '_'
+    self.t = (self.t + 1)%2
+  
+  def _win_(self, ip):
+    t = 'X' if self.t == 0 else 'O'
+    for _ in range(-1, 2):
+      for i in range(-1, 2):
+        if (_, i) == (0, 0): continue
+        c, ipC1, ipC2 = 0, ip.copy(), ip.copy()
+        while 0 <= ipC1[0] < self.size and 0 <= ipC1[1] < self.size and self.board[ipC1[0]][ipC1[1]] == t: c, ipC1[0], ipC1[1] = c + 1, ipC1[0] + _, ipC1[1] + i
+        while 0 <= ipC2[0] < self.size and 0 <= ipC2[1] < self.size and self.board[ipC2[0]][ipC2[1]] == t: c, ipC2[0], ipC2[1] = c + 1, ipC2[0] - _, ipC2[1] - i
+        if c >= 6: return True
+    return False
+
+  def run(self):
+    self.showBoard()
+    i = self._input_()
+    while i != 'gg':
+      if i == 'back':
+        if b == 'back':
+          print(f"{'-'*5} Invalid input, please try again {'-'*5}")
+          i = self._input_()
+          continue
+        self._back_(b)
+        self.showBoard()
+        i, b = self._input_(), i
+        continue
+      self.board[i[0]][i[1]], self.t = 'X' if self.t else 'O', (self.t + 1) % 2
+      self.showBoard()
+      if self._win_(i): break
+      if self._boardIsFull_():
+        print("\n Tie !!")
+        return
+      i, b = self._input_(), i
+    print(f"\n{'X' if self.t == 0 else 'O'} Win!")
+
+  def showBoard(self):
+    b = self.board
+    for _ in range(self.size): print(f"{"---|"+str(_) if _ == 0 else (int(_/10) if _%10 == 0 else "-")} ", end = ("" if _ != self.size - 1 else "\n"))
+    for _ in range(self.size): print(f"{('O ' if self.t == 0 else 'X ') if _ == 0 else ''}{" |"+str(_) if _ == 0 else (_ if _ < 9 else _%10)} ", end = "")
+    for _ in range(self.size): print(f"{("\n___|_") if _ == 0 else ("_" if _ != self.size - 1 else "_.")} ", end = "" if _ != self.size - 1 else "\n")
+    for _ in range(self.size):
+      print(f"{_} {' ' if _ <= 9 else ''}", end = "")
+      for i in range(self.size):
+        print(f"|{b[_][i]}", end = "")
+      print("|")
+  
+  # to run this game:
+  # game = Gomoku(size in int)
+  # game.run()
+
 def countAndSay(self, n: int) -> str:
   if n == 1: return "1"
   s = "1"
