@@ -1,5 +1,5 @@
 def isArmstrong(digits):
-  return digits == sum([int(str(digits)[i])**int(len(str(digits))) for i in range(len(str(digits)))])
+  return digits == sum([int(str(digits)[i])**len(str(digits)) for i in range(len(str(digits)))])
 
 def romanToInt(roman):
   values = {'I':1, 'V':5, 'X': 10, 'L':50,'C':100, 'D':500, 'M':1000}
@@ -240,6 +240,67 @@ def showBoard(b): # board[n][n]
     print("")
 
 #--------------------
+
+def removeNthFromEnd(head, n):
+  # Given the head of a linked list, remove the nth node from the end of the list and return its head
+  # Definition for singly-linked list.
+  # class ListNode:
+  #     def __init__(self, val=0, next=None):
+  #         self.val = val
+  #         self.next = next
+  l, h = ListNode(), ListNode()
+  l.next, h.next = head, head
+  t = l
+  for _ in range(n):
+    h = h.next
+  
+  while h.next:
+    h = h.next
+    l = l.next
+
+  l.next = l.next.next
+  return t.next
+
+  # a = [1,2,3,4,5]
+  # head = ListNode()
+  # b = head
+  # for _ in a:
+  #   t = ListNode(_)
+  #   b.next = t
+  #   b = b.next
+  # head = head.next
+  # head = removeNthFromEnd(head, 1)
+
+def letterCombinations(digits): # 2 <= digits <= 9999
+  s = [int(_) for _ in f"{digits:04d}"]
+
+  n = {0: ' ', 2: "abc", 3: "def", 4: "ghi", 5: "jkl", 6: "mno", 7: "pqrs", 8: "tuv", 9: "wxyz"}
+
+  return [(a + b + c + d).replace(" ", "") for a in n[s[0]] for b in n[s[1]] for c in n[s[2]] for d in n[s[3]]]
+  # print(letterCombinations(234))
+
+def python_format_spec():
+  # 1. It can be used in three places:
+  #   f"{value:format_spec}"
+  #   "{:format_spec}".format(value)
+  #   format(value, "format_spec")
+  "https://docs.python.org/3/library/string.html#formatspec"
+
+def isHappy(n):
+  st = [int(_) for _ in str(n)]
+  m = 0
+  t = []
+
+  while t != st:
+    print(st, t)
+    if len(st) == 1: t = st.copy()
+    for _ in st:
+      m += _**2
+    st = [int(_) for _ in str(m)]
+    m = 0
+  
+  return True if st[0] == 1 else False
+  # print(isHappy(7))
 
 def convert(s, numRows): # Zigzag Conversion
   l = len(s)
