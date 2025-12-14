@@ -241,6 +241,28 @@ def showBoard(b): # board[n][n]
 
 #--------------------
 
+def generateParenthesis(n):
+  output = []
+
+  def _gen_(pat = '(', op = n - 1, cp = n): # initially op = n - 1, cp = n
+    # open first then close, so cp must <= op
+    if op == 0 and cp == 0: 
+      output.append(pat)
+      return
+    if op == cp: # op & cp >= 1
+      _gen_(pat + '(', op - 1, cp)
+    elif op < cp:
+      if op == 0:
+        _gen_(pat + ')', op, cp - 1)
+      else:
+        _gen_(pat + '(', op - 1, cp)
+        _gen_(pat + ')', op, cp - 1)
+    else: return
+
+  _gen_()
+  return output
+  # print(generateParenthesis(4))
+
 def removeNthFromEnd(head, n):
   # Given the head of a linked list, remove the nth node from the end of the list and return its head
   # Definition for singly-linked list.
