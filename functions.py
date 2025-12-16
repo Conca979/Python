@@ -241,6 +241,22 @@ def showBoard(b): # board[n][n]
 
 #--------------------
 
+def getRow(rowIndex):
+  if rowIndex == 0: return [1]
+  if rowIndex == 1: return [1,1]
+  r = [1,1]
+
+  for _ in range(1, rowIndex):
+    a = [1]
+    for i in range(_):
+      a.append(r[i] + r[i + 1])
+    a.append(1)
+    r = a
+
+  return r
+  # b = getRow(0)
+  # print(b)
+
 def hasPathSum(root, targetSum):
   # Definition for a binary tree node.
   # class TreeNode:
@@ -248,18 +264,11 @@ def hasPathSum(root, targetSum):
   #         self.val = val
   #         self.left = left
   #         self.right = right
-  if not root: return False
-
   def _run_(node = root, t = targetSum, sum = 0):
-    if not node.left and not node.right: # leaf
+    if not node: return False
+    if not node.left and not node.right:
       return True if (sum + node.val) == t else False
-    a, b = False, False
-    if node.left:
-      a = _run_(node.left, t, sum + node.val)
-    if node.right:
-      b = _run_(node.right, t, sum + node.val)
-    
-    return a or b
+    return _run_(node.left, t, sum + node.val) or _run_(node.right, t, sum + node.val)
       
   return _run_()
 

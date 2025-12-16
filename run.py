@@ -90,13 +90,44 @@ head = head.next
 
 # head = reverseKGroup(head, 2)
 
-for _ in a:
-  print(head.val)
-  head = head.next
+# for _ in a:
+#   print(head.val)
+#   head = head.next
 
 class TreeNode:
   def __init__(self, val = 0, left = None, right = None):
     self.val = val
     self.left = left
     self.right = right
+
+def minPathSum(b): # b = 2d board
+  r, c = len(b), len(b[0])
+  for _ in range(0, r):
+    for i in range(0, c):
+      if (_, i) == (0, 0): continue
+      if i == 0 and _ != 0:
+        b[_][i] = b[_][i] + b[_ - 1][i]
+      elif i != 0 and _ == 0:
+        b[_][i] = b[_][i] + b[_][i - 1]
+      else:
+        b[_][i] = b[_][i] + min(b[_ - 1][i], b[_][i - 1])
+  return b[-1][-1]
+
+def generate(numRows):
+  b = [[0 for _ in range(numRows)] for _ in range(numRows)]
+  for _ in range(numRows):
+    for i in range(numRows):
+      if not all([_, i]): b[_][i] = 1
+      else:
+        b[_][i] = b[_ - 1][i] + b[_][i - 1]
+  
+  r = []
+  for _ in range(numRows):
+    row = []
+    for i in range(_ + 1):
+      row.append(b[i][_ - i])
+    r.append(row)
+
+  return r
+
 
