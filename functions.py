@@ -241,6 +241,79 @@ def showBoard(b): # board[n][n]
 
 #--------------------
 
+def hasPathSum(root, targetSum):
+  # Definition for a binary tree node.
+  # class TreeNode:
+  #     def __init__(self, val=0, left=None, right=None):
+  #         self.val = val
+  #         self.left = left
+  #         self.right = right
+  if not root: return False
+
+  def _run_(node = root, t = targetSum, sum = 0):
+    if not node.left and not node.right: # leaf
+      return True if (sum + node.val) == t else False
+    a, b = False, False
+    if node.left:
+      a = _run_(node.left, t, sum + node.val)
+    if node.right:
+      b = _run_(node.right, t, sum + node.val)
+    
+    return a or b
+      
+  return _run_()
+
+def swapPairs(head):
+  # Definition for singly-linked list.
+  # class ListNode:
+  #     def __init__(self, val=0, next=None):
+  #         self.val = val
+  #         self.next = next
+  t = ListNode()
+  t.next = head
+  tmp1 = t
+  tmp2 = t
+
+  for _ in range(2):
+    if not tmp2: return head
+    else:
+      tmp2 = tmp2.next
+  
+  while True:
+    if tmp2:
+      a = tmp1.next
+      b = tmp2.next
+      tmp1.next = a.next
+      tmp2.next = a
+      a.next = b
+      #
+      tmp2 = tmp2.next
+    else: break
+    for _ in range(2):
+      if not tmp2: break
+      tmp1 = tmp1.next
+      tmp2 = tmp2.next
+
+  return t.next
+
+def combinationSum(candidates, target):
+  r = []
+
+  def _track_(i = 0, t = target, s = []): # s: [a,...] , i: index
+    if t == 0:
+      r.append(s)
+      return
+    if t > 0:
+      for _ in candidates[i:]:
+        tmp = s.copy()
+        tmp.append(_)
+        _track_(i, t - _, tmp)
+        i += 1
+
+  _track_()
+  return r
+  # print(combinationSum([2,3,5], 8))
+
 def generateParenthesis(n):
   output = []
 

@@ -14,6 +14,10 @@
 
 # 3d array [a][b][c] : a the depth, b rows and c columns
 
+class ListNode:
+  def __init__(self, val = 0, next = None):
+    self.val = val
+    self.next = next
 
 def threeSum(nums):
   r = []
@@ -45,3 +49,54 @@ def threeSum(nums):
 
 # print(threeSum([-1,0,1,2,-1,-4])) # [[-1,-1,2],[-1,0,1]]
 #              [-4,-1,-1,0,1,2]
+
+
+def reverseKGroup(head, k):
+  # Definition for singly-linked list.
+  # class ListNode:
+  #     def __init__(self, val=0, next=None):
+  #         self.val = val
+  #         self.next = next
+  t = ListNode()
+  t.next = head
+  tmp1 = t
+  tmp2 = t
+
+  for _ in range(k - 1):
+    if not tmp2: return head
+    else:
+      tmp2 = tmp2.next
+
+  a = tmp1.next
+  b = a.next
+  c = tmp2.next
+  d = c.next
+
+  tmp1.next = c
+  tmp2.next = a
+  a.next = d
+  c.next = b
+
+  return t.next
+
+head = ListNode()
+a = [1,2,3,4,5]
+b = head
+for _ in a:
+  t = ListNode(_)
+  b.next = t
+  b = b.next
+head = head.next
+
+# head = reverseKGroup(head, 2)
+
+for _ in a:
+  print(head.val)
+  head = head.next
+
+class TreeNode:
+  def __init__(self, val = 0, left = None, right = None):
+    self.val = val
+    self.left = left
+    self.right = right
+
