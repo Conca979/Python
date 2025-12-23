@@ -79,55 +79,81 @@ def reverseKGroup(head, k):
 
   return t.next
 
-head = ListNode()
-a = [1,2,3,4,5]
-b = head
-for _ in a:
-  t = ListNode(_)
-  b.next = t
-  b = b.next
-head = head.next
+def sortColors(nums):
+  """
+  Do not return anything, modify nums in-place instead.
+  """
+  l = len(nums)
+  if l == 1: return
+  elif l == 2:
+    if nums[0] > nums[1]:
+      nums[0], nums[1] = nums[1], nums[0]
+    else: return
+  #
+  def _swap_(i1, i2):
+    nums[i1], nums[i2] = nums[i2], nums[i1]
+  #
+  for _ in range(l - 2):
+    if nums[_] > nums[_ + 1]: _swap_(_, _ + 1)
+    if nums[_ + 1] > nums[_ + 2]: _swap_(_ + 1, _ + 2)
+    if nums[_] > nums[_ + 1]: _swap_(_, _ + 1)
 
-# head = reverseKGroup(head, 2)
+def moveZeroes(nums):
+  """
+  Do not return anything, modify nums in-place instead.
+  """
+  def _swap_(i1, i2):
+    nums[i1], nums[i2] = nums[i2], nums[i1]
 
-# for _ in a:
-#   print(head.val)
-#   head = head.next
+  l = len(nums)
+  # for i in range(l):
+  #   a = i
+  #   if nums[i] == 0:
+  #     while a != l:
+  #       if nums[a] != 0: # first non-zero element encounterd
+  #         _swap_(i, a)
+  #         break
+  #       a += 1
+  #     else: return
 
-class TreeNode:
-  def __init__(self, val = 0, left = None, right = None):
-    self.val = val
-    self.left = left
-    self.right = right
+  c = 0 # number of 0s
+  index = 0
+  while index < l:
+    print(c, index)
+    a = 0
+    if nums[index] == 0: c += 1
+    else:
+      for i in range(c):
+        if (index + i) == l: return
+        _swap_(index + i, index - c + i)
+        a += 1
+      index += a
+      continue
+    index += + 1
 
-def minPathSum(b): # b = 2d board
-  r, c = len(b), len(b[0])
-  for _ in range(0, r):
-    for i in range(0, c):
-      if (_, i) == (0, 0): continue
-      if i == 0 and _ != 0:
-        b[_][i] = b[_][i] + b[_ - 1][i]
-      elif i != 0 and _ == 0:
-        b[_][i] = b[_][i] + b[_][i - 1]
-      else:
-        b[_][i] = b[_][i] + min(b[_ - 1][i], b[_][i - 1])
-  return b[-1][-1]
+# nums = [0,1,0,3,12,0,4]
+# # nums = [1,0]
+# moveZeroes(nums)
+# print(nums)
 
-def generate(numRows):
-  b = [[0 for _ in range(numRows)] for _ in range(numRows)]
-  for _ in range(numRows):
-    for i in range(numRows):
-      if not all([_, i]): b[_][i] = 1
-      else:
-        b[_][i] = b[_ - 1][i] + b[_][i - 1]
+
+def threeSum(nums):
+  n = sorted(nums)
   
   r = []
-  for _ in range(numRows):
-    row = []
-    for i in range(_ + 1):
-      row.append(b[i][_ - i])
-    r.append(row)
-
+  l = len(n)
+  for i in range(l - 2):
+    if i > 0:
+      if nums[i] != nums[i - 1]: 
+        j = i + 1
+        k = l - 1
+        while j < k:
+          s = n[i] + n[j] + n[k]
+          if s == 0:
+            r.append([n[i], n[j], n[k]])
+            j, k = j + 1, k - 1
+          elif s < 0: j += 1
+          else: k -= 1
+  
   return r
-
 

@@ -1,6 +1,15 @@
 def isArmstrong(digits):
   return digits == sum([int(str(digits)[i])**len(str(digits)) for i in range(len(str(digits)))])
 
+def twoSum(nums, target): # O(n) due to hash table dict
+  # Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
+  d = {}
+  for i in range(len(nums)):
+    if (target - nums[i]) not in d:
+      d[nums[i]] = i
+    else:
+      return [i, d[target - nums[i]]]
+
 def romanToInt(roman):
   values = {'I':1, 'V':5, 'X': 10, 'L':50,'C':100, 'D':500, 'M':1000}
   total = 0
@@ -240,6 +249,82 @@ def showBoard(b): # board[n][n]
     print("")
 
 #--------------------
+
+def groupAnagrams(strs):
+  r = {}
+
+  for s in strs:
+    if len(s) not in r: r[len(s)] = [[s]]
+    else:
+      for _ in r[len(s)]:
+        if sorted(_[0]) == sorted(s):
+          _.append(s)
+          break
+      else:
+        r[len(s)].append([s])
+
+  result = []
+  for _ in r.values():
+    for i in _:
+      result.append(i)
+  return result
+  # print(groupAnagrams(["act","pots","tops","cat","stop","hat"]))
+
+def generate(numRows): # code is correct, but not how everyone’d write it today.
+  # The function returns Pascal’s triangle with numRows rows.
+  b = [[0 for _ in range(numRows)] for _ in range(numRows)]
+  for _ in range(numRows):
+    for i in range(numRows):
+      if not all([_, i]): b[_][i] = 1
+      else:
+        b[_][i] = b[_ - 1][i] + b[_][i - 1]
+  
+  r = []
+  for _ in range(numRows):
+    row = []
+    for i in range(_ + 1):
+      row.append(b[i][_ - i])
+    r.append(row)
+
+  return r
+
+def maxProfit(prices):
+  mx = 0
+  for _ in range(1, len(prices)):
+    t = prices[_] - prices[_ - 1]
+    prices[_] = prices[_] if t < 0 else prices[_ - 1]
+    mx = t if t > mx else mx
+  return mx
+
+def isSameTree(p, q):
+  # Definition for a binary tree node.
+  # class TreeNode:
+  #     def __init__(self, val=0, left=None, right=None):
+  #         self.val = val
+  #         self.left = left
+  #         self.right = right
+  def _run_(t1 = q, t2 = p):
+    if (t1 != None) ^ (t2 != None): # either of t1 or t2 None
+      return False
+    elif t1 and t2: # both t1 and t2 not None
+      if t1.val != t2.val: return False
+      return _run_(t1.left, t2.left) and _run_(t1.right, t2.right)
+    return True # both t1 and t2 None 
+
+  return _run_()
+
+def wordPattern(pattern, s):
+  s = s.split()
+  if len(pattern) != len(s): return False
+
+  for _ in range(len(pattern)):
+    if s[_] not in s[:_]:
+      if pattern[_] in pattern[:_]: return False
+    else: # word duplicated
+      if pattern[_] != pattern[s.index(s[_])]: return False
+
+  return True
+  # print(wordPattern("abba", "dog cat cat dog"))
 
 def getRow(rowIndex):
   if rowIndex == 0: return [1]
