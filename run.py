@@ -134,26 +134,31 @@ def moveZeroes(nums):
 # nums = [0,1,0,3,12,0,4]
 # # nums = [1,0]
 # moveZeroes(nums)
-# print(nums)
+# print(nums)  
+
+def trap(height): # height = [nums]
+  a = 0 # area
+  la = 0 # last area
+  w = height[0] # wall
+  sw = 0 # subwall
+  i = 0 # index if wall
+
+  for _ in range(len(height)):
+    if height[_] < w:
+      t = height[_]*(_ - i - 1) - sw
+      a += t
+      la += t
+      sw += height[_]
+    elif height[_] >= w:
+      t = w*(_ - i - 1) - sw
+      a += (t - la)
+      la = 0
+      w = height[_]
+      i = _
+      sw = 0
+    print(f"a: {a} | t: {t} | w: {w} | i: {i} | _: {_} | sw: {sw}")
+  
+  return a
 
 
-def threeSum(nums):
-  n = sorted(nums)
-  
-  r = []
-  l = len(n)
-  for i in range(l - 2):
-    if i > 0:
-      if nums[i] != nums[i - 1]: 
-        j = i + 1
-        k = l - 1
-        while j < k:
-          s = n[i] + n[j] + n[k]
-          if s == 0:
-            r.append([n[i], n[j], n[k]])
-            j, k = j + 1, k - 1
-          elif s < 0: j += 1
-          else: k -= 1
-  
-  return r
 

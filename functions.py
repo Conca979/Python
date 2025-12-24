@@ -9,6 +9,29 @@ def twoSum(nums, target): # O(n) due to hash table dict
       d[nums[i]] = i
     else:
       return [i, d[target - nums[i]]]
+    
+def findTarget(root, k):
+  # Definition for a binary tree node.
+  # class TreeNode:
+  #     def __init__(self, val=0, left=None, right=None):
+  #         self.val = val
+  #         self.left = left
+  #         self.right = right
+  n = []
+  def _run_(node = root):
+    if not node:
+      n.append(node.val)
+      _run_(node.left)
+      _run_(node.right)
+  _run_()
+
+  d = {}
+  for i in range(len(n)):
+    if (k - n[i]) not in d:
+      d[n[i]] = i
+    else:
+      return True
+  return False
 
 def romanToInt(roman):
   values = {'I':1, 'V':5, 'X': 10, 'L':50,'C':100, 'D':500, 'M':1000}
@@ -220,7 +243,7 @@ def solveSudoku(b): # b: board[row][column]
       else: return False
     else: return True
 
-  def _solveSudoku_(b, r = 0, c = 0): # raw backtracking
+  def _solveSudoku_(b, r = 0, c = 0): # brute force, raw backtracking
     if c == 9: r, c = r + 1, 0
     if r == 9: return True
     #
@@ -249,6 +272,46 @@ def showBoard(b): # board[n][n]
     print("")
 
 #--------------------
+
+def inorderTraversal(root):
+  # Definition for a binary tree node.
+  # class TreeNode:
+  #     def __init__(self, val=0, left=None, right=None):
+  #         self.val = val
+  #         self.left = left
+  #         self.right = right
+  r = []
+  def _run_(node = root):
+    if not node: return
+    if node.left:
+      _run_(node.left)
+    r.append(node.val)
+    if node.right:
+      _run_(node.right)
+  _run_()
+  return r
+
+def maxDepth(root):
+  # Definition for a binary tree node.
+  # class TreeNode:
+  #     def __init__(self, val=0, left=None, right=None):
+  #         self.val = val
+  #         self.left = left
+  #         self.right = right
+  def _run_(node = root, depth = 1):
+    if not node: return depth - 1
+    return max(_run_(node.left, depth + 1), _run_(node.right, depth + 1))
+  return _run_()
+
+def twoSumII(numbers, target):
+  l, r = 0, len(numbers) - 1
+  while True:
+    if numbers[l] + numbers[r] > target:
+      r -= 1
+    elif numbers[l] + numbers[r] < target:
+      l += 1
+    else:
+      return [l + 1, r + 1]
 
 def groupAnagrams(strs):
   r = {}
@@ -562,7 +625,7 @@ def minPathSum(b): # b = 2d board
   return b[-1][-1]
 
 class Gomoku: # 1st arg n as board's size n by n, 2nd arg is not available yet
-  # it's actually tic-tac-toe game but the goal is to get 5 consecutive pieces of yours either horizontally, vertically, or diagonally.
+  # it's actually tic-tac-toe game but the goal is to get 5 consecutive pieces of your side either horizontally, vertically, or diagonally.
   def __init__(self, size = 9, st = "pvp"):
     self.size = int(size)
     # the 1st turn is X: 1, next O: 0
